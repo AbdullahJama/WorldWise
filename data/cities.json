@@ -37,10 +37,26 @@
       "id": 98443197
     },
     {
+      "cityName": "Sisante",
+      "country": "Spain",
+      "emoji": {
+        "type": "img",
+        "key": null,
+        "ref": null,
+        "props": {
+          "src": "https://flagcdn.com/24x18/es.png",
+          "alt": "flag"
+        },
+        "_owner": null,
+        "_store": {}
+      },
+      "date": "2024-06-07T17:50:35.042Z",
+      "notes": "",
+      "position": {
+        "lat": "39.415485430798626",
+        "lng": "-2.217531693244788"
+      },
       "id": 98443198
-    },
-    {
-      "id": 98443199
     }
   ]
 }

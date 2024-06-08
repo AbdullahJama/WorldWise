@@ -8,14 +8,7 @@ import Message from "./Message.jsx";
 import Spinner from "./Spinner.jsx";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-export function convertToEmoji(countryCode) {
-  const codePoints = countryCode
-    .toUpperCase()
-    .split("")
-    .map((char) => 127397 + char.charCodeAt());
-  return String.fromCodePoint(...codePoints);
-}
+import { useCities } from "../contexts/CitiesContexts.jsx";
 
 export const flagemojiToPNG = (flag) => {
   const countryFlag = flag.toLowerCase();
@@ -42,6 +35,7 @@ function Form() {
   } = useGeolocation();
   const BASE_URL = `https://us1.locationiq.com/v1/reverse`;
   const KEY = `pk.2bf696fa0a45178ca8c02d2f76d4e244`;
+  const { CreateCity, isLoading } = useCities();
 
   useEffect(
     function () {
@@ -58,7 +52,9 @@ function Form() {
 
           if (!data.address.country_code) throw new Error();
 
-          setCityName(data.address.village || data.address.town);
+          setCityName(
+            data.address.village || data.address.town || data.address.city
+          );
           setCountry(data.address.country);
           setEmoji(flagemojiToPNG(data.address.country_code));
           console.log(emoji);
@@ -75,9 +71,9 @@ function Form() {
     [lat, lng]
   );
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!cityName || !date || !position) return;
+    if (!cityName || !date) return;
     const newCity = {
       cityName,
       country,
@@ -86,7 +82,8 @@ function Form() {
       notes,
       position: { lat, lng },
     };
-    console.log(newCity);
+    await CreateCity(newCity);
+    Navigate("/app/cities");
   }
 
   if (isLoadingGeoCoding) return <Spinner />;
@@ -96,7 +93,10 @@ function Form() {
   if (geoCodingError) return <Message message={geoCodingError} />;
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form
+      className={`${styles.form} ${isLoading ? styles.loading : ""}`}
+      onSubmit={handleSubmit}
+    >
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input

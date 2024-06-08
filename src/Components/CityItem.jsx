@@ -11,7 +11,8 @@ const formatDate = (date) =>
   }).format(new Date(date));
 
 function CityItem({ city, key }) {
-  const { currentCity } = useCities();
+  const { currentCity, DeleteCity } = useCities();
+
   const flagemojiToPNG = (flag) => {
     var countryCode = Array.from(flag, (codeUnit) => codeUnit.codePointAt())
       .map((char) => String.fromCharCode(char - 127397).toLowerCase())
@@ -22,9 +23,14 @@ function CityItem({ city, key }) {
   };
 
   const { cityName, emoji, date, id, position } = city;
-  console.log(position);
-
+  console.log(position, "position value in cityitem");
   console.log(city);
+
+  function deleteHnadle(e) {
+    e.preventDefault();
+    DeleteCity(id);
+  }
+
   return (
     <li>
       <Link
@@ -36,7 +42,9 @@ function CityItem({ city, key }) {
         <span className={Styles.emoji}>{flagemojiToPNG(emoji)}</span>
         <h3 className={Styles.name}>{cityName}</h3>
         <time className={Styles.date}>{formatDate(date)}</time>
-        <button className={Styles.deleteBtn}>&times;</button>
+        <button className={Styles.deleteBtn} onClick={deleteHnadle}>
+          &times;
+        </button>
       </Link>
     </li>
   );
