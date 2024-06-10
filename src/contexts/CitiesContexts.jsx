@@ -37,20 +37,14 @@ function reducer(state, action) {
       };
 
     case "reject":
-      return {
-        isLoading: false,
-        error: action.payload,
-      };
+      return { ...state, isLoading: false, error: action.payload };
 
     default:
-      throw new Error(error);
+      throw new Error("Error, Page Does Not Exist");
   }
 }
 
 function CitiesProvider({ children }) {
-  /*const [cities, setCities] = useState([]);
-  const [currentCity, setCurrentCity] = useState({});
-  const [isLoading, setIsLoading] = useState(false);*/
   const [{ cities, isLoading, currentCity, error }, dispatch] = useReducer(
     reducer,
     initialValue
@@ -131,6 +125,7 @@ function CitiesProvider({ children }) {
         cities,
         isLoading,
         currentCity,
+        error,
         getCity,
         CreateCity,
         DeleteCity,
