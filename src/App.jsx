@@ -1,20 +1,30 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { CitiesProvider, useCities } from "./contexts/CitiesContexts.jsx";
+import { CitiesProvider } from "./contexts/CitiesContexts.jsx";
+import { AuthProvider } from "./contexts/FakeAuthContext.jsx";
 import IsProtected from "./Components/isProtected.jsx";
+import { Suspense, lazy } from "react";
 
-import Product from "./pages/Product";
+/*import Product from "./pages/Product";
 import Homepage from "./pages/Homepage";
 import Pricing from "./pages/Pricing.jsx";
 import AppLayout from "./pages/AppLayout.jsx";
-import "./index.css";
 import Login from "./pages/Login.jsx";
-import PageNav from "./Components/PageNav";
-import PageNotFound from "./pages/PageNotFound";
+import PageNotFound from "./pages/PageNotFound";*/
+
+const Homepage = lazy(() => import("./pages/Homepage"));
+const Product = lazy(() => import("./pages/Product"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const AppLayout = lazy(() => import("./pages/AppLayout"));
+const Login = lazy(() => import("./pages/Login"));
+const PageNotFound = lazy(() => import("./pages/PageNotFound"));
+
+import "./index.css";
+//import PageNav from "./Components/PageNav";
 import CityList from "./Components/CityList.jsx";
 import CountriesList from "./Components/CountriesList.jsx";
 import City from "./Components/City.jsx";
 import Form from "./Components/Form.jsx";
-import { AuthProvider } from "./contexts/FakeAuthContext.jsx";
+import SpinnerFullPage from "./Components/SpinnerFullPage.jsx";
 
 function App() {
   return (
@@ -22,27 +32,32 @@ function App() {
       <AuthProvider>
         <CitiesProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path={"/Product"} element={<Product />}></Route>
-              <Route path={"/Pricing"} element={<Pricing />}></Route>
-              <Route index path={"/"} element={<Homepage />}></Route>
-              <Route path={"/login"} element={<Login />}></Route>
-              <Route
-                path={"/App"}
-                element={
-                  <IsProtected>
-                    <AppLayout />
-                  </IsProtected>
-                }
-              >
-                <Route index element={<Navigate replace to="cities" />}></Route>
-                <Route path={"cities"} element={<CityList />}></Route>
-                <Route path={"cities/:id"} element={<City />}></Route>
-                <Route path={"countries"} element={<CountriesList />}></Route>
-                <Route path={"form"} element={<Form />}></Route>
-              </Route>
-              <Route path={"/*"} element={<PageNotFound />}></Route>
-            </Routes>
+            <Suspense fallback={<SpinnerFullPage />}>
+              <Routes>
+                <Route path={"/Product"} element={<Product />}></Route>
+                <Route path={"/Pricing"} element={<Pricing />}></Route>
+                <Route index path={"/"} element={<Homepage />}></Route>
+                <Route path={"/login"} element={<Login />}></Route>
+                <Route
+                  path={"/App"}
+                  element={
+                    <IsProtected>
+                      <AppLayout />
+                    </IsProtected>
+                  }
+                >
+                  <Route
+                    index
+                    element={<Navigate replace to="cities" />}
+                  ></Route>
+                  <Route path={"cities"} element={<CityList />}></Route>
+                  <Route path={"cities/:id"} element={<City />}></Route>
+                  <Route path={"countries"} element={<CountriesList />}></Route>
+                  <Route path={"form"} element={<Form />}></Route>
+                </Route>
+                <Route path={"/*"} element={<PageNotFound />}></Route>
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </CitiesProvider>
       </AuthProvider>
