@@ -4,13 +4,6 @@ import { AuthProvider } from "./contexts/FakeAuthContext.jsx";
 import IsProtected from "./Components/isProtected.jsx";
 import { Suspense, lazy } from "react";
 
-/*import Product from "./pages/Product";
-import Homepage from "./pages/Homepage";
-import Pricing from "./pages/Pricing.jsx";
-import AppLayout from "./pages/AppLayout.jsx";
-import Login from "./pages/Login.jsx";
-import PageNotFound from "./pages/PageNotFound";*/
-
 const Homepage = lazy(() => import("./pages/Homepage"));
 const Product = lazy(() => import("./pages/Product"));
 const Pricing = lazy(() => import("./pages/Pricing"));
